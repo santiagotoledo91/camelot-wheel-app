@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <PWAPrompt/>
     <MainComponent/>
   </div>
 
@@ -7,11 +8,13 @@
 
 <script>
 import MainComponent from './components/MainComponent.vue'
+import PWAPrompt from './components/PWAPrompt.vue'
 
 export default {
-  name: 'App',
+  name: 'CamelotWheelApp',
   components: {
-    MainComponent
+    MainComponent,
+    PWAPrompt
   }
 }
 </script>

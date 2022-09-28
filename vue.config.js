@@ -1,4 +1,8 @@
 module.exports = {
+  pwa: {
+    name: 'Camelot wheel',
+    themeColor: '#000000'
+  },
   pluginOptions: {
     s3Deploy: {
       registry: undefined,
