@@ -1,52 +1,55 @@
 <template>
   <div class="MainComponent">
-      <div class="noteSelector">
-        <h3 class="noteSelector__title">
-          Current note
-        </h3>
-        <div class="noteSelector__container">
-          <div
-            v-for="(note, key) in notes"
-            v-bind:key="key"
-            v-on:click="selectNote(key)"
-            :class="selectedNote === key ? 'noteSelector__containerNote noteSelector__containerNote--selected' : 'noteSelector__containerNote'"
-          >
-            {{ key }}
-          </div>
+    <div class="noteSelector">
+      <h3 class="noteSelector__title">
+        Current note
+      </h3>
+      <div class="noteSelector__container">
+        <div
+          v-for="(note, key) in notes"
+          v-bind:key="key"
+          v-on:click="selectNote(key)"
+          :class="selectedNote === key ? 'noteSelector__containerNote noteSelector__containerNote--selected' : 'noteSelector__containerNote'"
+        >
+          {{ note }}
         </div>
       </div>
-      <div class="moveSelector">
-        <h3 class="moveSelector__title">
-          Energy
-        </h3>
-        <div class="moveSelector__container">
-          <div
-            v-for="(fn, move) in moves"
-            v-bind:key="move"
-            v-on:click="selectMove(move)"
-            :class="selectedMove === move ? 'moveSelector__containerMove moveSelector__containerMove--selected' : 'moveSelector__containerMove'"
-          >
-            {{ move }}
-          </div>
+    </div>
+    <div class="moveSelector">
+      <h3 class="moveSelector__title">
+        Energy
+      </h3>
+      <div class="moveSelector__container">
+        <div
+          v-for="(fn, move) in moves"
+          v-bind:key="move"
+          v-on:click="selectMove(move)"
+          :class="selectedMove === move ? 'moveSelector__containerMove moveSelector__containerMove--selected' : 'moveSelector__containerMove'"
+        >
+          {{ movesLabels[move] }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      v-if="results.length > 0"
+      class="results"
+    >
+      <h3 class="results__title">
+        Next note
+      </h3>
+
+      <div class="results__container">
+        <div
+          v-for="key in results"
+          v-bind:key="key"
+          class="results__containerResult results__containerResult--selected"
+        >
+          {{ notes[key] }}
         </div>
       </div>
 
-      <div class="results">
-        <h3 class="results__title">
-          Next note
-        </h3>
-
-        <div class="results__container">
-          <div
-            v-for="result in results"
-            v-bind:key="result"
-            class="results__containerResult"
-          >
-            {{ result }}
-          </div>
-        </div>
-
-      </div>
+    </div>
   </div>
 </template>
 
@@ -83,7 +86,46 @@ export default {
         '11-B': 'A',
         '12-B': 'E'
       },
+      movesLabels: {
+        '+': '+',
+        '++': '+ +',
+        '+++': '+ + +',
+        '-': '-',
+        '--': '- -',
+        '---': '- - -',
+        '=': 'Same',
+        '!=': 'Mood change'
+      },
       moves: {
+        '+': {
+          A: (note) => {
+            return [
+              `${note.number}-${this.toggleLetter(note.letter)}`,
+              `${this.addNumber(note.number, 1)}-${note.letter}`
+            ]
+          },
+          B: (note) => {
+            return [
+              `${this.addNumber(note.number, 1)}-${note.letter}`
+            ]
+          }
+        },
+        '++': {
+          A: (note) => {
+            return []
+          },
+          B: (note) => {
+            return []
+          }
+        },
+        '+++': {
+          A: (note) => {
+            return []
+          },
+          B: (note) => {
+            return []
+          }
+        },
         '=': {
           A: (note) => {
             return [
@@ -98,25 +140,42 @@ export default {
             ]
           }
         },
-        '+': {
+        '-': {
+          A: (note) => {
+            return []
+          },
+          B: (note) => {
+            return []
+          }
+        },
+        '--': {
+          A: (note) => {
+            return []
+          },
+          B: (note) => {
+            return []
+          }
+        },
+        '---': {
+          A: (note) => {
+            return []
+          },
+          B: (note) => {
+            return []
+          }
+        },
+        '!=': {
           A: (note) => {
             return [
-              `${note.number}-${this.toggleLetter(note.letter)}`,
-              `${this.addNumber(note.number, 1)}-${note.letter}`
+              `${this.addNumber(note.number, 3)}-${this.toggleLetter(note.letter)}`
             ]
           },
           B: (note) => {
             return [
-              `${this.addNumber(note.number, 1)}-${note.letter}`
+              `${this.addNumber(note.number, 9)}-${this.toggleLetter(note.letter)}`
             ]
           }
         }
-        // '++': [],
-        // '+++': [],
-        // '-': [],
-        // '--': [],
-        // '---': [],
-        // '!=': []
       }
     }
   },
@@ -173,10 +232,10 @@ export default {
     justify-content: center;
 
     &Note, &Move, &Result {
-      cursor: pointer;
-      width: 20%;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       margin: 5px;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -185,12 +244,18 @@ export default {
       background: rgba(255, 255, 255, 0.25);
       border-color: transparent;
       color: #FFFFFF;
+      font-weight: 500;
 
       &--selected {
         background: rgba(255, 255, 255, 0.75);
         color: #2c3e50;
         font-weight: bold;
       }
+    }
+
+    &Move {
+      width: 75px;
+      height: 75px;
     }
   }
 }
