@@ -11,7 +11,7 @@ import MainComponent from './components/MainComponent.vue'
 import PWAPrompt from './components/PWAPrompt.vue'
 
 export default {
-  name: 'CamelotWheelApp',
+  name: 'HarmonicMixApp',
   components: {
     MainComponent,
     PWAPrompt

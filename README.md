@@ -1,4 +1,4 @@
-# camelot-wheel-app
+# harmonic-mix-app
 
 ## Project setup
 ```

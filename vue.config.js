@@ -1,6 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'Camelot wheel',
+    name: 'Harmonic mix APP',
     themeColor: '#000000'
   },
   pluginOptions: {
@@ -9,7 +9,7 @@ module.exports = {
       awsProfile: 'default',
       overrideEndpoint: false,
       region: 'eu-west-3',
-      bucket: 'camelot-wheel-app',
+      bucket: 'harmonic-mix-app',
       createBucket: true,
       staticHosting: true,
       staticIndexPage: 'index.html',
