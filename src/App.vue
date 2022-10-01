@@ -26,6 +26,8 @@ body {
   background-size: 400% 400%;
   animation: gradient 30s ease infinite;
   height: 100vh;
+  width: 100vw;
+  margin: 0;
 }
 
 @keyframes gradient {
@@ -46,5 +48,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  width: 100vw;
 }
 </style>
