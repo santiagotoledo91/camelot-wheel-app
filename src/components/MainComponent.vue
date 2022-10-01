@@ -325,12 +325,12 @@ export default {
       &Move {
         font-size: small;
 
-        width: 13vw;
-        height: 13vw;
+        width: 14vw;
+        height: 14vw;
 
         @media (orientation: landscape) {
-          width: 10vh;
-          height: 10vh;
+          width: 14vh;
+          height: 14vh;
         }
       }
 
