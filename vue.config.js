@@ -9,7 +9,7 @@ module.exports = {
       awsProfile: 'default',
       overrideEndpoint: false,
       region: 'us-east-1',
-      bucket: 'harmonicmix_app',
+      bucket: 'harmonicmix-app',
       createBucket: true,
       staticHosting: true,
       staticIndexPage: 'index.html',
