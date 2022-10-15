@@ -1,4 +1,4 @@
-# harmonic-mix-app
+# harmonicmix_app
 
 ## Project setup
 ```
