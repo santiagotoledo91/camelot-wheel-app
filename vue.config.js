@@ -8,7 +8,7 @@ module.exports = {
       registry: undefined,
       awsProfile: 'default',
       overrideEndpoint: false,
-      region: 'eu-east-1',
+      region: 'us-east-1',
       bucket: 'harmonicmix_app',
       createBucket: true,
       staticHosting: true,
