@@ -2,41 +2,17 @@
   <div class="MainComponent">
     <div class="noteSelector">
       <h3 class="noteSelector__title">
-        Current note
+        Harmonic mix
       </h3>
       <div class="noteSelector__container">
-        <div v-for="(note, key) in notesLabels" v-bind:key="key" v-on:click="selectNote(key)"
-          :class="selectedNote === key ? 'noteSelector__containerNote noteSelector__containerNote--selected' : 'noteSelector__containerNote'">
-          <div class="noteSelector__containerNoteLabel">{{ note }}</div>
-          <div class="noteSelector__containerNoteKey">{{ key.replace('-','') }}</div>
+        <div v-for="(label, note) in notes" v-bind:key="note" v-on:click="selectedNote = note"
+             :class="getClassForNote(note)">
+          <div class="noteSelector__noteName">{{ label }}</div>
+          <div v-if="nextNotes[note] !== undefined" class="noteSelector__noteEffect">
+            <img v-for="(iconSrc, key) in effects[nextNotes[note]].icons" v-bind:key="key" class="noteSelector__noteEffectIcon" :src="iconSrc" alt=""/>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="moveSelector">
-      <h3 class="moveSelector__title">
-        Energy
-      </h3>
-      <div class="moveSelector__container">
-        <div v-for="(fn, move) in moves" v-bind:key="move" v-on:click="selectMove(move)"
-          :class="selectedMove === move ? 'moveSelector__containerMove moveSelector__containerMove--selected' : 'moveSelector__containerMove'">
-          {{ movesLabels[move] }}
-        </div>
-      </div>
-    </div>
-
-    <div class="results">
-      <h3 class="results__title">
-        Next note
-      </h3>
-
-      <div class="results__container">
-        <div v-for="key in results" v-bind:key="key"
-          class="results__containerResult results__containerResult--selected">
-          <div class="noteSelector__containerResultLabel">{{ notesLabels[key] }}</div>
-          <div class="noteSelector__containerResultKey">{{ key.replace('-','') }}</div>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
@@ -47,157 +23,215 @@ export default {
   data () {
     return {
       selectedNote: null,
-      selectedMove: null,
-      notesLabels: {
-        '1-A': 'Abm',
-        '2-A': 'Ebm',
-        '3-A': 'Bbm',
-        '4-A': 'Fm',
-        '5-A': 'Cm',
-        '6-A': 'Gm',
-        '7-A': 'Dm',
-        '8-A': 'Am',
-        '9-A': 'Em',
-        '10-A': 'Bm',
-        '11-A': 'F#m',
-        '12-A': 'Dbm',
-        '1-B': 'B',
-        '2-B': 'F#',
-        '3-B': 'Db',
-        '4-B': 'Ab',
-        '5-B': 'Eb',
-        '6-B': 'Bb',
-        '7-B': 'F',
-        '8-B': 'C',
-        '9-B': 'G',
-        '10-B': 'D',
+      notes: {
         '11-B': 'A',
-        '12-B': 'E'
+        '8-A': 'Am',
+        '4-B': 'Ab',
+        '1-A': 'Abm',
+
+        '1-B': 'B',
+        '10-A': 'Bm',
+        '6-B': 'Bb',
+        '3-A': 'Bbm',
+
+        '8-B': 'C',
+        '5-A': 'Cm',
+
+        '10-B': 'D',
+        '7-A': 'Dm',
+        '3-B': 'Db',
+        '12-A': 'Dbm',
+
+        '12-B': 'E',
+        '9-A': 'Em',
+        '5-B': 'Eb',
+        '2-A': 'Ebm',
+
+        '7-B': 'F',
+        '4-A': 'Fm',
+        '2-B': 'F#',
+        '11-A': 'F#m',
+
+        '9-B': 'G',
+        '6-A': 'Gm'
       },
-      movesLabels: {
-        '+': '+',
-        '++': '+ +',
-        '+++': '+ + +',
-        '-': '-',
-        '--': '- -',
-        '---': '- - -',
-        '=': 'Same',
-        '!=': 'Mood change'
-      },
-      moves: {
+      effects: {
         '-': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 11)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${note.number}-${this.toggleLetter(note.letter)}`,
-              `${this.addNumber(note.number, 11)}-${note.letter}`
-            ]
+          class: 'smallDropEffect',
+          label: 'Small drop',
+          icons: ['/img/down-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 11)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${note.number}-${this.toggleLetter(note.letter)}`,
+                `${this.addNumber(note.number, 11)}-${note.letter}`
+              ]
+            }
           }
         },
         '--': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 3)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 3)}-${note.letter}`
-            ]
+          class: 'mediumDropEffect',
+          label: 'Medium drop',
+          icons: ['/img/down-icon.svg', '/img/down-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 3)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 3)}-${note.letter}`
+              ]
+            }
           }
         },
         '---': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 10)}-${note.letter}`,
-              `${this.addNumber(note.number, 5)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 10)}-${note.letter}`,
-              `${this.addNumber(note.number, 5)}-${note.letter}`
-            ]
+          class: 'bigDropEffect',
+          label: 'Big drop',
+          icons: ['/img/down-icon.svg', '/img/down-icon.svg', '/img/down-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 10)}-${note.letter}`,
+                `${this.addNumber(note.number, 5)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 10)}-${note.letter}`,
+                `${this.addNumber(note.number, 5)}-${note.letter}`
+              ]
+            }
           }
         },
         '+': {
-          A: (note) => {
-            return [
-              `${note.number}-${this.toggleLetter(note.letter)}`,
-              `${this.addNumber(note.number, 1)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 1)}-${note.letter}`
-            ]
+          class: 'smallIncreaseEffect',
+          label: 'Small increase',
+          icons: ['/img/up-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${note.number}-${this.toggleLetter(note.letter)}`,
+                `${this.addNumber(note.number, 1)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 1)}-${note.letter}`
+              ]
+            }
           }
         },
         '++': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 9)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 9)}-${note.letter}`
-            ]
+          class: 'mediumIncreaseEffect',
+          label: 'Medium increase',
+          icons: ['/img/up-icon.svg', '/img/up-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 9)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 9)}-${note.letter}`
+              ]
+            }
           }
         },
         '+++': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 2)}-${note.letter}`,
-              `${this.addNumber(note.number, 7)}-${note.letter}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 2)}-${note.letter}`,
-              `${this.addNumber(note.number, 7)}-${note.letter}`
-            ]
+          class: 'bigIncreaseEffect',
+          label: 'Big increase',
+          icons: ['/img/up-icon.svg', '/img/up-icon.svg', '/img/up-icon.svg'],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 2)}-${note.letter}`,
+                `${this.addNumber(note.number, 7)}-${note.letter}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 2)}-${note.letter}`,
+                `${this.addNumber(note.number, 7)}-${note.letter}`
+              ]
+            }
           }
         },
         '=': {
-          A: (note) => {
-            return [
-              `${note.number}-${note.letter}`,
-              `${this.addNumber(note.number, 11)}-${this.toggleLetter(note.letter)}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${note.number}-${note.letter}`,
-              `${this.addNumber(note.number, 1)}-${this.toggleLetter(note.letter)}`
-            ]
+          class: 'sameEffect',
+          label: 'Same',
+          icons: [],
+          calculators: {
+            A: (note) => {
+              return [
+                `${note.number}-${note.letter}`,
+                `${this.addNumber(note.number, 11)}-${this.toggleLetter(note.letter)}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${note.number}-${note.letter}`,
+                `${this.addNumber(note.number, 1)}-${this.toggleLetter(note.letter)}`
+              ]
+            }
           }
         },
         '!=': {
-          A: (note) => {
-            return [
-              `${this.addNumber(note.number, 3)}-${this.toggleLetter(note.letter)}`
-            ]
-          },
-          B: (note) => {
-            return [
-              `${this.addNumber(note.number, 9)}-${this.toggleLetter(note.letter)}`
-            ]
+          class: 'moodChangeEffect',
+          label: 'Mood change',
+          icons: [],
+          calculators: {
+            A: (note) => {
+              return [
+                `${this.addNumber(note.number, 3)}-${this.toggleLetter(note.letter)}`
+              ]
+            },
+            B: (note) => {
+              return [
+                `${this.addNumber(note.number, 9)}-${this.toggleLetter(note.letter)}`
+              ]
+            }
           }
         }
       }
     }
   },
   methods: {
-    selectNote: function (note) {
-      this.selectedNote = note
+    getClassForNote (note) {
+      if (this.selectedNote === null) {
+        return 'noteSelector__note'
+      }
+
+      if (this.selectedNote === note) {
+        return 'noteSelector__note noteSelector__note--selected'
+      }
+
+      const effect = this.nextNotes[note]
+      if (effect !== undefined) {
+        return `noteSelector__note noteSelector__note--${this.effects[effect].class}`
+      }
+
+      return 'noteSelector__note noteSelector__note--notSelected'
     },
-    selectMove: function (move) {
-      this.selectedMove = move
+    calculateNextNotes (noteMetadata) {
+      const nextNotes = {}
+
+      Object.keys(this.effects).forEach((effect) => {
+        const notes = this.effects[effect].calculators[noteMetadata.letter](noteMetadata)
+
+        for (const note of notes) {
+          nextNotes[note] = effect
+        }
+      })
+
+      return nextNotes
     },
     getNoteMetadata (note) {
       const parts = note.split('-')
@@ -216,14 +250,12 @@ export default {
     }
   },
   computed: {
-    results () {
-      if (!this.selectedNote || !this.selectedMove) {
+    nextNotes () {
+      if (!this.selectedNote) {
         return []
       }
 
-      const noteMetadata = this.getNoteMetadata(this.selectedNote)
-
-      return this.moves[this.selectedMove][noteMetadata.letter](this.getNoteMetadata(this.selectedNote))
+      return this.calculateNextNotes(this.getNoteMetadata(this.selectedNote))
     }
   }
 }
@@ -239,42 +271,6 @@ export default {
 
   .noteSelector {
     width: 100%;
-  }
-
-  .moveSelector {
-    width: 100%;
-  }
-
-  .results {
-    width: 100%;
-  }
-
-  @media (orientation: landscape) {
-    flex-direction: row;
-
-    .noteSelector {
-      width: 50%;
-    }
-
-    .moveSelector {
-      width: 30%;
-    }
-
-    .results {
-      width: 20%;
-    }
-  }
-
-  .results {
-    &__container {
-      @media (orientation: landscape) {
-        flex-direction: column;
-      }
-    }
-  }
-  .noteSelector,
-  .moveSelector,
-  .results {
     display: flex;
     flex-direction: column;
 
@@ -290,62 +286,81 @@ export default {
       justify-content: center;
       align-items: center;
       width: 100%;
+    }
 
-      &Note,
-      &Move,
-      &Result {
-        position: relative;
-        margin: 5px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        border-radius: 3px;
-        background: rgba(255, 255, 255, 0.25);
-        border-color: transparent;
-        color: #FFFFFF;
-        font-weight: 500;
+    &__note {
+      width: calc(25% - 10px);
+      margin: 4px;
+      aspect-ratio: 1/1;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: transparent;
+      color: #FFFFFF;
 
-        &--selected {
-          background: rgba(255, 255, 255, 0.75);
-          color: #2c3e50;
-          font-weight: bold;
-        }
+      @media (orientation: landscape) {
+        width: calc(12.5% - 10px);
+      }
 
-        &Key {
-          font-size: x-small;
-          position: absolute;
-          bottom: 2px;
-          right: 2px;
+      &--selected {
+        background: rgba(255, 255, 255, 1);
+        color: #2f2f2f;
+      }
+
+      &--notSelected {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      &--smallDropEffect,
+      &--mediumDropEffect,
+      &--bigDropEffect {
+        background: rgba(255, 255, 255, 0.6);
+
+        & .noteSelector__noteEffect {
+          bottom: 5px;
         }
       }
 
-      &Note,
-      &Move {
-        font-size: small;
+      &--smallIncreaseEffect,
+      &--mediumIncreaseEffect,
+      &--bigIncreaseEffect {
+        background: rgba(255, 255, 255, 0.6);
 
-        width: 14vw;
-        height: 14vw;
-
-        @media (orientation: landscape) {
-          width: 14vh;
-          height: 14vh;
+        & .noteSelector__noteEffect {
+          top: 5px;
         }
       }
 
-      &Result {
-        width: 100px;
-        height: 100px;
-        font-size: xx-large;
+      &--sameEffect {
+        background: rgba(255, 255, 255, 0.6);
+      }
 
-        &Key {
-          font-size: medium;
-          right: 4px;
-        }
+      &--moodChangeEffect {
+        background-color: #383838;
       }
     }
-  }
 
+    &__noteName {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    &__noteEffect {
+      width: 100%;
+      display: flex;
+      position: absolute;
+      justify-content: space-around;
+    }
+
+    &__noteEffectIcon {
+      width: 10px;
+      margin: 0 5px;
+    }
+  }
 }
 </style>
